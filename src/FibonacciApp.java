@@ -1,3 +1,9 @@
+/**
+ * Calculates the nth term in the Fibonacci sequence using recursion.
+ *
+ * @param n the position in the Fibonacci sequence
+ * @return the nth Fibonacci number
+ */
 public class FibonacciApp {
 
     public static int fibonacci(int n) {
