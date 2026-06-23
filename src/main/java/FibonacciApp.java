@@ -12,7 +12,7 @@ public class FibonacciApp {
     }
 
     public static void main(String[] args) {
-        int result = fibonacci(12);
-        System.out.println("The 12th term of the Fibonacci sequence is " + result + ".");
+        int result = fibonacci(10);
+        System.out.println("Jenkins CI Demo: Fibonacci(10) = " + result);
     }
 }
