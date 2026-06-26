@@ -13,6 +13,6 @@ public class FibonacciApp {
 
     public static void main(String[] args) {
         int result = fibonacci(10);
-        System.out.println("Jenkins CI Demo: Fibonacci(10) = " + result);
+        System.out.println("Docker Rebuild Demo: Fibonacci(10) = " + result);
     }
 }
