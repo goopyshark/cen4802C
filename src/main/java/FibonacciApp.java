@@ -33,7 +33,7 @@ public class FibonacciApp {
 
         logger.info("Application started.");
 
-        // Run 100 times to generate plenty of log entries
+        // Run 100 times to generate logs and monitoring data
         for (int i = 1; i <= 100; i++) {
 
             int input = i % 11;
@@ -45,6 +45,15 @@ public class FibonacciApp {
             int result = fibonacci(input);
 
             logger.info("Run {}: Fibonacci({}) = {}", i, input, result);
+
+            // Pause for one second so resource usage can be monitored
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                logger.error("Monitoring delay was interrupted.", e);
+                Thread.currentThread().interrupt();
+                break;
+            }
         }
 
         // Generate one ERROR log
@@ -52,6 +61,6 @@ public class FibonacciApp {
 
         logger.info("Application finished.");
 
-        System.out.println("Logging Demo Complete!");
+        System.out.println("Logging and Monitoring Demo Complete!");
     }
 }
