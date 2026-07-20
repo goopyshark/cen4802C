@@ -3,26 +3,24 @@ import org.slf4j.LoggerFactory;
 
 public class FibonacciApp {
 
-    // Create the logger
-    private static final Logger logger = LoggerFactory.getLogger(FibonacciApp.class);
+    // Creates the logger for the application.
+    private static final Logger logger =
+            LoggerFactory.getLogger(FibonacciApp.class);
 
     /**
-     * Calculates the nth term in the Fibonacci sequence using recursion.
+     * Calculates the nth Fibonacci number using recursion.
      *
      * @param n the position in the Fibonacci sequence
-     * @return the nth Fibonacci number
+     * @return the Fibonacci number at position n, or -1 for invalid input
      */
-    public static int fibonacci(int n) {
-
-        logger.debug("Calculating Fibonacci({})", n);
+    public static long fibonacci(int n) {
 
         if (n < 0) {
-            logger.error("Invalid input: {}", n);
+            logger.error("Invalid Fibonacci input: {}", n);
             return -1;
         }
 
         if (n <= 1) {
-            logger.info("Base case reached: Fibonacci({}) = {}", n, n);
             return n;
         }
 
@@ -31,36 +29,75 @@ public class FibonacciApp {
 
     public static void main(String[] args) {
 
-        logger.info("Application started.");
+        logger.info("FibonacciApp profiling session started.");
 
-        // Run 100 times to generate logs and monitoring data
-        for (int i = 1; i <= 100; i++) {
+        long applicationStartTime = System.currentTimeMillis();
 
-            int input = i % 11;
+        /*
+         * Fibonacci(40) creates a noticeable CPU workload because
+         * the recursive method recalculates many of the same values.
+         *
+         * Running it repeatedly keeps the application active long
+         * enough for VisualVM or another profiler to collect data.
+         */
+        for (int iteration = 1; iteration <= 100; iteration++) {
 
-            if (input >= 8) {
-                logger.warn("Large Fibonacci input detected: {}", input);
-            }
+            int input = 40;
 
-            int result = fibonacci(input);
+            long calculationStartTime = System.nanoTime();
 
-            logger.info("Run {}: Fibonacci({}) = {}", i, input, result);
+            long result = fibonacci(input);
 
-            // Pause for one second so resource usage can be monitored
+            long calculationEndTime = System.nanoTime();
+
+            double executionTimeMilliseconds =
+                    (calculationEndTime - calculationStartTime) / 1_000_000.0;
+
+            logger.info(
+                    "Iteration {}: Fibonacci({}) = {} | Execution time: {} ms",
+                    iteration,
+                    input,
+                    result,
+                    String.format("%.3f", executionTimeMilliseconds)
+            );
+
+            System.out.printf(
+                    "Iteration %d: Fibonacci(%d) = %d | Execution time: %.3f ms%n",
+                    iteration,
+                    input,
+                    result,
+                    executionTimeMilliseconds
+            );
+
+            /*
+             * A short pause gives time to view the graphs without
+             * making sleeping the application's primary activity.
+             */
             try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                logger.error("Monitoring delay was interrupted.", e);
+                Thread.sleep(200);
+            } catch (InterruptedException exception) {
+                logger.error("The profiling workload was interrupted.", exception);
                 Thread.currentThread().interrupt();
                 break;
             }
         }
 
-        // Generate one ERROR log
+        // Demonstrates invalid-input logging.
         fibonacci(-5);
 
-        logger.info("Application finished.");
+        long applicationEndTime = System.currentTimeMillis();
+        long totalExecutionTime =
+                applicationEndTime - applicationStartTime;
 
-        System.out.println("Logging and Monitoring Demo Complete!");
+        logger.info(
+                "FibonacciApp profiling session finished. Total time: {} ms",
+                totalExecutionTime
+        );
+
+        System.out.println();
+        System.out.println("Profiling workload completed.");
+        System.out.println(
+                "Total application time: " + totalExecutionTime + " milliseconds"
+        );
     }
 }
